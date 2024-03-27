@@ -33,3 +33,16 @@ class BombTetromino(Tetromino):
                             30 - 1,  # Height of the border rectangle
                         ),
                     )
+                    
+    def lock_tetromino(self, game):
+        row_offset = self.row_offset - 2 if self.row_offset - 2 != 0 else 0
+        column_offset = self.col_offset - 2 if self.col_offset - 2 != 0 else 0
+        size = len(self.blocks[self.state])
+        for i in range(size + 2):
+            if i >= len(game.grid.blocks):
+                continue
+            for j in range(size + 2):
+                if j + row_offset < len(game.grid.blocks[i + row_offset]):
+                    game.grid.blocks[j + row_offset][
+                        j + column_offset
+                        ] = 0

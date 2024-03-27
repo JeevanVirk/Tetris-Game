@@ -87,7 +87,6 @@ class Tetromino:
         return False
 
     def rotate(self):
-        print("hi")
         self.state = (self.state + 1) % len(self.blocks)
         if self.out_of_bounds():
             self.state = (self.state - 1) % len(self.blocks)

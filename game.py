@@ -27,11 +27,12 @@ class Game:
 
         # game objects
         self.grid = Grid()
+        self.freeze_now = False
+        self.bomb_now = False
         self.tetromino = self.spawn_new_tetromino()
         self.ui = UI()
         self.next_tetromino = self.spawn_new_tetromino()
-        self.freeze_now = False
-        self.bomb_now = False
+        
 
     def run(self):
 
@@ -59,7 +60,12 @@ class Game:
                     if event.key == pygame.K_f and self.game_over == False:
                         self.freeze_now  = True
                     if event.key == pygame.K_b and self.game_over == False:
-                        self.bomb_now = True
+                        bomb = BombPowerupFactory().create_power_tetromino(self.tetromino)
+                        bomb.row_offset = self.tetromino.row_offset
+                        bomb.col_offset = self.tetromino.col_offset
+                        bomb.state = self.tetromino.state
+                        bomb.color = self.tetromino.color
+                        self.tetromino = bomb
                         
                 elif event.type == event_every_200ms and self.game_over == False:
                     command = Command.DOWN
@@ -74,18 +80,6 @@ class Game:
             self.draw()
             pygame.display.update()
             
-            # random_value  = random.randint(0, 100)
-            # print(random_value)
-            #  # Check if the score reaches 50 to spawn the Bomb power-up Tetromino
-            # if random_value > 90 and self.score != 0:
-            #     # Spawn the Bomb power-up Tetromino
-            #     self.tetromino = BombPowerupFactory().create_power_tetromino(self.tetromino)
-
-            # # Check if the score reaches 100 to spawn the Freeze power-up Tetromino
-            # if random_value < 15 and self.score != 0:
-            #     # Spawn the Freeze power-up Tetromino
-            #     self.next_tetromino = FreezePowerupFactory().create_power_tetromino(self.tetromino)
-            #     self.update(command)
 
     def draw(self):
         self.ui.draw(self.screen, self)
@@ -97,12 +91,13 @@ class Game:
         
     def spawn_new_tetromino(self):
         self.freeze_now = False
-        self.bomb_now = False
+    
         random_value  = random.randint(1, 100)
         print(random_value)
              # Check if the score reaches 50 to spawn the Bomb power-up Tetromino
-        if random_value >= 90:
-            self.bomb_now = True
+        if random_value >= 90 or self.bomb_now == True:
+            print("Hello")
+            self.bomb_now = False
                 # Spawn the Bomb power-up Tetromino
             print(self.tetromino,"L")
             return BombPowerupFactory().create_power_tetromino(self.tetromino)
@@ -123,14 +118,12 @@ class Game:
                     STetromino(),
                     JTetromino(),
                     LTetromino(),
-                    #FreezePowerTetromino.create_power_tetromino(),
-                    # BombPowerTetromino.create_power_tetromino(),
                 ]
             )
 
     def check_for_any_full_lines_to_clear(self):
         return self.grid.check_for_any_full_lines_to_clear()
-
+    
     def update_score(self, lined_cleared, move_down_points):
         self.score += move_down_points
         if lined_cleared == 1:
