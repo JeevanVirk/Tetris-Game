@@ -56,6 +56,7 @@ class Tetromino:
 
         if self.collides_with_other_tetrominos(game):
             self.row_offset -= 1
+            game.freeze_now = False
             if self.row_offset <= 0:
                 print("game over")
                 game.game_over = True
@@ -67,6 +68,7 @@ class Tetromino:
 
         if self.out_of_bounds():
             self.row_offset -= 1
+            game.freeze_now = False
             self.lock_tetromino(game)
             game.tetromino = game.next_tetromino
             game.next_tetromino = game.spawn_new_tetromino()
@@ -85,6 +87,7 @@ class Tetromino:
         return False
 
     def rotate(self):
+        print("hi")
         self.state = (self.state + 1) % len(self.blocks)
         if self.out_of_bounds():
             self.state = (self.state - 1) % len(self.blocks)
@@ -286,3 +289,4 @@ class TTetromino(Tetromino):
                 [0, 1, 0],
             ],
         ]
+

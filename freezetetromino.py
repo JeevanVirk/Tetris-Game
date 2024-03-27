@@ -1,6 +1,7 @@
-from tetrominos import Tetromino
+from tetrominos import Tetromino,JTetromino,LTetromino,OTetromino,STetromino,TTetromino,ZTetromino
 from resources.colors import Colors
 import pygame
+import random
 
 class FreezeTetromino(Tetromino):
     def __init__(self,tetromino) -> None:
@@ -29,21 +30,10 @@ class FreezeTetromino(Tetromino):
                         (
                             (col_index + self.col_offset) * 30 + ui_x_offset + 1,
                             (row_index + self.row_offset) * 30 + ui_y_offset + 1,
-                            30 - 2,
-                            30 - 2,
+                            30 - 3,
+                            30 - 3,
                         ),
                    )
-    def move_down(self, game):
-        self.row_offset += 1
-
-        if self.collides_with_other_tetrominos(game):
-            self.row_offset -= 1
-            if self.row_offset <= 0:
-                print("game over")
-                game.game_over = True
-                return
-            self.lock_tetromino(game)
-            game.tetromino = game.next_tetromino
-            game.next_tetromino = game.spawn_new_tetromino()
-            pygame.time.set_timer(pygame.USEREVENT + 1, 200)
-            return                
+   
+      
+    
